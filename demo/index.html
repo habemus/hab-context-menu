@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <title>hab-context-menu demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../polymer/polymer.html">
+
+    <link rel="import" href="../hab-context-menu.html">
+  </head>
+  <body>
+    
+    <template id="demo-app" is="dom-bind">
+      
+      <ul>
+        <template is="dom-repeat" items="{{ items }}">
+          <li>
+            <button on-contextmenu="openContextMenu">[[ item.name ]]</button>
+          </li>
+        </template>
+      </ul>
+      
+      <hab-context-menu id="context-menu" options="{{ options }}"></hab-context-menu>
+    </template>
+    
+    <script type="text/javascript" charset="utf-8">
+      
+      window.addEventListener('WebComponentsReady', function () {
+        var demoApp = document.querySelector('#demo-app');
+        var contextMenu = document.querySelector('#context-menu');
+        
+        // options of the context menu
+        demoApp.set('options', [
+          {
+            label: 'option 1',
+            callback: function (data) {
+              var context = data.context;
+              alert('option-1 clicked with context ' + context.name)
+              
+              contextMenu.menuClose();
+            }
+          },
+          {
+            label: 'option 2',
+            callback: function (data) {
+              var context = data.context;
+              alert('option-2 clicked with context ' + context.name)
+              
+              contextMenu.menuClose();
+            }
+          },
+          {
+            label: 'option 3',
+            callback: function (data) {
+              var context = data.context;
+              alert('option-3 clicked with context ' + context.name);
+              
+              contextMenu.menuClose();
+            }
+          }
+        ]);
+        
+        // list of items to be rendered
+        demoApp.set('items', [
+          { name: '1', data: 'some-data-1' },
+          { name: '2', data: 'some-data-2' },
+          { name: '3', data: 'some-data-3' },
+          { name: '4', data: 'some-data-4' },
+          { name: '5', data: 'some-data-5' },
+        ]);
+        
+        // opens the context menu with the model
+        // as the context
+        demoApp.openContextMenu = function (e) {
+          e.preventDefault();
+          
+          var item = e.model.item;
+          console.log(item);
+          
+          var menuTop = e.clientY;
+          var menuLeft = e.clientX;
+          
+          contextMenu.menuOpenWithContext(item, {
+            top: menuTop,
+            left: menuLeft
+          });
+        };
+      });
+      
+    </script>
+
+  </body>
+</html>
