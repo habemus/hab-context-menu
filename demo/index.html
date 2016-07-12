@@ -59,6 +59,26 @@
               
               contextMenu.menuClose();
             }
+          },
+          {
+            label: 'open in new tab',
+            type: 'url',
+
+            url: function (context, item) {
+              return context.url;
+            },
+
+            hide: function (context, item) {
+              if (!context.url) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          },
+          {
+            label: 'some input',
+            type: 'input',
           }
         ]);
         
@@ -69,6 +89,7 @@
           { name: '3', data: 'some-data-3' },
           { name: '4', data: 'some-data-4' },
           { name: '5', data: 'some-data-5' },
+          { name: 'url', url: 'https://habem.us' },
         ]);
         
         // opens the context menu with the model

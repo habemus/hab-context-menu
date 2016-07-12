@@ -58,19 +58,19 @@
         padding: 0;
       }
 
-      menu menuitem {
+      menu menuitem, menu li {
         display: block;
         padding: 0 20px;
         border-top: 1px solid rgba(0, 0, 0, 0);
         border-bottom: 1px solid rgba(0, 0, 0, 0);
       }
 
-      menu menuitem::after {
+      menu menuitem:after, menu li:after {
         vertical-align: 2px;
         content: attr(label);
       }
 
-      menu menuitem:hover {
+      menu menuitem:hover, menu li:hover {
         /*background: -webkit-linear-gradient(top, #648bf5, #2866f2);*/
         /*background: linear-gradient(to bottom, #648bf5 0%, #2866f2 100%);*/
         background-color: #bbb;
@@ -78,7 +78,7 @@
         /*border-bottom: 1px solid #1758e7;*/
       }
 
-      menu menuitem:hover::after {
+      menu menuitem:hover:after, menu li:hover:after {
         color: #fff;
       }
       /**
@@ -90,10 +90,35 @@
 
     <menu>
       <template is="dom-repeat" items="{{ options }}">
-        <menuitem
-          on-tap="_handleOptionTap"
-          label$="[[ item.label ]]">
-        </menuitem>
+        <!-- default -->
+        <template is="dom-if" if="[[ !item.type ]]">
+          <menuitem
+            hidden$="{{ _computeItemValue('hide', context, item) }}"
+            on-tap="_handleMenuitemTap"
+            label$="{{ _computeItemValue('label', context, item) }}">
+          </menuitem>
+        </template>
+
+        <!-- url -->
+        <template is="dom-if" if="[[ _itemIs(item, 'url') ]]">
+          <li
+            hidden$="{{ _computeItemValue('hide', context, item) }}">
+            <a
+              on-tap="_handleMenuitemTap"
+              target="{{ _computeItemValue('target', context, item) }}"
+              href="{{ _computeItemValue('url', context, item) }}">
+              {{ _computeItemValue('label', context, item) }}
+            </a>
+          </li>
+        </template>
+
+        <!-- input -->
+        <template is="dom-if" if="[[ _itemIs(item, 'input') ]]">
+          <li
+            hidden$="{{ _computeItemValue('hide', context, item) }}">
+            <input type="text">
+          </li>
+        </template>
       </template>
     </menu>
 
@@ -165,15 +190,43 @@
       this.menuClose();
     },
 
-    _handleOptionTap: function (e) {
+    _handleMenuitemTap: function (e) {
       var data = e.model.item;
 
-      data.callback({
-        menuElement: this,
-        menuOption: data,
-        context: this.get('context'),
-        event: e,
-      });
+      if (typeof data.callback === 'function') {
+        data.callback({
+          menuElement: this,
+          menuOption: data,
+          context: this.get('context'),
+          event: e,
+        });
+      } else {
+        // no callback defined, run the default behaviour of
+        // closing the menu in the next tick so that it does
+        // not interfere with the default behavior of the elemnt
+        setTimeout(this.menuClose.bind(this), 0);
+      }
+    },
+
+    /**
+     * Helper function to check the item type
+     */
+    _itemIs: function (item, type) {
+      return item.type === type;
+    },
+
+    _computeItemValue: function (key, context, item) {
+      if (!context) {
+        return;
+      }
+
+      var value = item[key];
+
+      if (typeof value === 'function') {
+        value = value(context, item);
+      }
+
+      return value;
     },
 
     menuOpenWithContext: function (context, position) {
