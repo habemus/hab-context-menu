@@ -64,11 +64,15 @@
             label: 'open in new tab',
             type: 'url',
 
-            url: function (context, item) {
+            url: function (data) {
+              var context = data.context;
+              
               return context.url;
             },
 
-            hide: function (context, item) {
+            hide: function (data) {
+              var context = data.context;
+
               if (!context.url) {
                 return true;
               } else {

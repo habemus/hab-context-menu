@@ -223,7 +223,11 @@
       var value = item[key];
 
       if (typeof value === 'function') {
-        value = value(context, item);
+        value = value({
+          menuElement: this,
+          menuOption: item,
+          context: context,
+        });
       }
 
       return value;
