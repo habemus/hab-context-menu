@@ -88,7 +88,7 @@
 
     </style>
 
-    <menu>
+    <menu id="menu">
       <template is="dom-repeat" items="{{ options }}">
         <!-- default -->
         <template is="dom-if" if="[[ !item.type ]]">
@@ -167,6 +167,15 @@
         type: Number,
         value: -2,
       },
+
+      /**
+       * Minimum distance from the bottom of the window
+       * @type {Number}
+       */
+      bottomMinimumOffset: {
+        type: Number,
+        value: 10,
+      }
     },
 
     behaviors: [
@@ -249,11 +258,54 @@
       var menuLeft = position.left + this.openOffsetX;
       var menuTop  = position.top  + this.openOffsetY;
 
-      // set positioning styles
-      this.style.left = menuLeft + 'px';
-      this.style.top  = menuTop  + 'px';
+      // at this moment the positioning is not ready yet.
+      // make the opacity 0 to hide the element but NOT affect
+      // its position calculation
+      this.style.opacity = 0;
 
       this.open();
+
+      // TODO: study deeper why Polymer.dom.flush
+      // has no effects on the positioning.
+      // We are facing a problem with calculating the
+      // boundingRect of the context-menu element.
+      // 
+      // For the time being, let the positioning be done
+      // on the next tick
+      // Polymer.dom.flush();
+
+      setTimeout(function () {
+        /**
+         * All this logic is performed in order to fit
+         * the menu within the viewport.
+         * It might be a redundant work, as the Polymer
+         * IronOverlayBehavior already implements
+         * IronFitBehavior.
+         *
+         * The main issue was that IronFitBehavior
+         * was quite hard to use and did not seem to
+         * have been designed for use with mouse positions
+         * but with element position and aligment instead.
+         */
+
+        // check whether the element fits in the window
+        var windowHeight = window.innerHeight;
+        var menuHeight   = this.$.menu.offsetHeight;
+
+        var bottomDelta = windowHeight - (menuTop + menuHeight + this.bottomMinimumOffset);
+
+        if (bottomDelta < 0) {
+          menuTop = menuTop + bottomDelta;
+        }
+
+        // set positioning styles
+        this.style.left = menuLeft + 'px';
+        this.style.top  = menuTop  + 'px';
+
+        // show element
+        this.style.opacity = 1;
+
+      }.bind(this), 10)
       
       // let backdropElement close on contextmenu event
       // add this event listener when the menu is opened
