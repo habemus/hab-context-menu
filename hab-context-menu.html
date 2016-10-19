@@ -112,11 +112,11 @@
           </li>
         </template>
 
-        <!-- input -->
-        <template is="dom-if" if="[[ _itemIs(item, 'input') ]]">
+        <!-- input:file -->
+        <template is="dom-if" if="[[ _itemIs(item, 'input:file') ]]">
           <li
             hidden$="{{ _computeItemValue('hide', context, item) }}">
-            <input type="text">
+            <input on-change="_handleFileInputChange" type="file">
           </li>
         </template>
       </template>
@@ -199,6 +199,9 @@
       this.menuClose();
     },
 
+    /**
+     * Menu item clicks
+     */
     _handleMenuitemTap: function (e) {
       var data = e.model.item;
 
@@ -208,6 +211,32 @@
           menuOption: data,
           context: this.get('context'),
           event: e,
+        });
+      } else {
+        // no callback defined, run the default behaviour of
+        // closing the menu in the next tick so that it does
+        // not interfere with the default behavior of the elemnt
+        setTimeout(this.menuClose.bind(this), 0);
+      }
+    },
+
+    /**
+     * File input
+     */
+    _handleFileInputChange: function (e) {
+      var data = e.model.item;
+      var file = e.target.files[0];
+
+      e.target.value = '';
+
+      if (typeof data.callback === 'function') {
+        data.callback({
+          menuElement: this,
+          menuOption: data,
+          context: this.get('context'),
+          event: e,
+
+          file: file,
         });
       } else {
         // no callback defined, run the default behaviour of
