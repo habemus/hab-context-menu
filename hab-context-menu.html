@@ -116,7 +116,7 @@
         <template is="dom-if" if="[[ _itemIs(item, 'input:file') ]]">
           <li
             hidden$="{{ _computeItemValue('hide', context, item) }}">
-            <input on-change="_handleFileInputChange" type="file">
+            <input on-change="_handleFileInputChange" type="file" multiple>
           </li>
         </template>
       </template>
@@ -224,10 +224,9 @@
      * File input
      */
     _handleFileInputChange: function (e) {
-      var data = e.model.item;
-      var file = e.target.files[0];
-
-      e.target.value = '';
+      var data  = e.model.item;
+      // make a copy of the files array
+      var files = Array.prototype.slice.call(e.target.files, 0);
 
       if (typeof data.callback === 'function') {
         data.callback({
@@ -236,7 +235,7 @@
           context: this.get('context'),
           event: e,
 
-          file: file,
+          files: files,
         });
       } else {
         // no callback defined, run the default behaviour of
@@ -244,6 +243,9 @@
         // not interfere with the default behavior of the elemnt
         setTimeout(this.menuClose.bind(this), 0);
       }
+
+      // reset the input at the end
+      e.target.value = '';
     },
 
     /**
