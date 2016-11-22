@@ -119,6 +119,18 @@
             <input on-change="_handleFileInputChange" type="file" multiple>
           </li>
         </template>
+
+        <!-- input:directory -->
+        <template is="dom-if" if="[[ _itemIs(item, 'input:directory') ]]">
+          <li
+            hidden$="{{ _computeItemValue('hide', context, item) }}">
+            <input
+              on-change="_handleFileInputChange"
+              type="file"
+              webkitdirectory mozdirectory msdirectory odirectory directory>
+          </li>
+        </template>
+        
       </template>
     </menu>
 
