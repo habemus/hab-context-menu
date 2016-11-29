@@ -96,11 +96,15 @@
         height: 22px;
       }
 
+      .file-container:hover {
+        background-color: #bbb;
+      }
+
       .file-container menuitem {
-        position: absolute;
+        position: relative;
         z-index: 2;
 
-        width: 100%;
+        /*width: 100%;*/
         top: 0;
         left: 0;
 
@@ -112,6 +116,7 @@
         z-index: 1;
 
         width: 100%;
+        height: 100%;
         top: 0;
         left: 0;
 
@@ -164,7 +169,7 @@
 
         <!-- input:file -->
         <template is="dom-if" if="[[ _itemIs(item, 'input:file') ]]">
-          <li
+          <div
             class="file-container"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
             <menuitem
@@ -172,12 +177,12 @@
               label$="{{ _computeItemValue('label', context, item) }}">
             </menuitem>
             <input on-change="_handleFileInputChange" type="file" multiple>
-          </li>
+          </div>
         </template>
 
         <!-- input:directory -->
         <template is="dom-if" if="[[ _itemIs(item, 'input:directory') ]]">
-          <li
+          <div
             class="file-container"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
             <menuitem
@@ -188,7 +193,7 @@
               on-change="_handleFileInputChange"
               type="file"
               webkitdirectory mozdirectory msdirectory odirectory directory>
-          </li>
+          </div>
         </template>
 
         <!-- submenu -->
@@ -200,7 +205,8 @@
             <hab-menu
               class="submenu"
               context="{{ context }}"
-              options="{{ item.options }}">
+              options="{{ item.options }}"
+              close="{{ close }}">
             </hab-menu>
           </li>
         </template>
@@ -234,6 +240,15 @@
       context: {
         type: Object,
       },
+
+      /**
+       * The main menuElement
+       * 
+       * @type {Object}
+       */
+      menuElement: {
+        type: Object,
+      }
     },
 
     /**
@@ -244,7 +259,7 @@
 
       if (typeof data.callback === 'function') {
         data.callback({
-          menuElement: this,
+          menuElement: this.get('menuElement'),
           menuOption: data,
           context: this.get('context'),
           event: e,
@@ -267,7 +282,7 @@
 
       if (typeof data.callback === 'function') {
         data.callback({
-          menuElement: this,
+          menuElement: this.get('menuElement'),
           menuOption: data,
           context: this.get('context'),
           event: e,
@@ -301,7 +316,7 @@
 
       if (typeof value === 'function') {
         value = value({
-          menuElement: this,
+          menuElement: this.get('menuElement'),
           menuOption: item,
           context: context,
         });

@@ -20,7 +20,8 @@
     <hab-menu
       id="menu"
       options="{{ options }}"
-      context="{{ context }}">
+      context="{{ context }}"
+      menu-element="{{ self }}">
     </hab-menu>
 
   </template>
@@ -91,6 +92,12 @@
       // bind the _handleBackdropContextmenu to this element
       this._handleBackdropContextmenu =
         this._handleBackdropContextmenu.bind(this);
+
+      /**
+       * Expose self to sub elements
+       * TODO: study improvement in implementation semantics
+       */
+      this.set('self', this);
     },
 
     _handleBackdropContextmenu: function (e) {
