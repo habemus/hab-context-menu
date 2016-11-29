@@ -9,6 +9,13 @@
     <link rel="import" href="../../polymer/polymer.html">
 
     <link rel="import" href="../hab-context-menu.html">
+    
+    <style>
+      
+      body {
+        background-color: skyblue;
+      }
+    </style>
   </head>
   <body>
     
@@ -47,6 +54,25 @@
             callback: function (data) {
               var context = data.context;
               alert('option-2 clicked with context ' + context.name)
+              
+              contextMenu.menuClose();
+            }
+          },
+          {
+            label: 'option 3',
+            callback: function (data) {
+              var context = data.context;
+              alert('option-3 clicked with context ' + context.name)
+              
+              contextMenu.menuClose();
+            }
+          },
+          
+          {
+            label: 'option 4',
+            callback: function (data) {
+              var context = data.context;
+              alert('option-4 clicked with context ' + context.name)
               
               contextMenu.menuClose();
             }

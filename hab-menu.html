@@ -7,119 +7,88 @@
   <template>
 
     <style>
-      :host {
-        /* ensure fixed position so that the menu may be placed anywhere */
-        position: fixed;
-      }
-
+    
       /**
-       * copied from
+       * Annotation: OSX menu reference
        * http://codepen.io/sstephenson/pen/zepwD
        */
+       
+      /**
+       * @menu-text-color: #3C3C3C;
+       * @menu-active-text-color: #F5F5F5;
+       * @menu-active-color: #6D6D6D;
+       */
+
       menu {
+        font-size: 14px;
         display: block;
+        
+        font-family: sans-serif;
 
         margin: 0;
-        padding: 3px 0 4px;
+        padding: 4px 0;
 
-        /*background: rgba(255, 255, 255, 0.95);*/
         background-color: white;
         /*box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.35);*/
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         border-radius: 2px;
-
-        /*font-family: Lucida Grande;*/
-        /*font-size: 14px;*/
-        /*line-height: 15px;*/
       }
 
-      menu:before {
+      menu > menuitem,
+      menu > .menuitem {
+        color: #3C3C3C;
         display: block;
-        position: absolute;
-        content: "";
-        top: -1px;
-        left: -1px;
-        bottom: -1px;
-        right: -1px;
+        
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
 
-        border-radius: 2px;
-        /*border: 1px solid rgba(0, 0, 0, 0.125);*/
-        z-index: -1;
-      }
-
-      menu hr {
-        border: none;
-        height: 1px;
-        background: rgba(0, 0, 0, 0.10);
-        margin: 6px 1px 5px;
-        padding: 0;
-      }
-
-      menu menuitem, menu li {
-        display: block;
-
-        height: 22px;
-
-        padding: 0 20px;
-        border-top: 1px solid rgba(0, 0, 0, 0);
-        border-bottom: 1px solid rgba(0, 0, 0, 0);
+        font-size: 14px;
+        height: 32px;
+        padding-left: 20px;
+        padding-right: 20px;
+        
+        min-width: 100px;
 
         white-space: nowrap;
+        text-decoration: none;
       }
 
-      menu menuitem:after, menu li:after {
-        vertical-align: 2px;
-        content: attr(label);
+      menu > menuitem:hover,
+      menu > .menuitem:hover {
+        background-color: #6D6D6D;
+        color: #F5F5F5;
+        cursor: default;
       }
-
-      menu menuitem:hover, menu li:hover {
-        /*background: -webkit-linear-gradient(top, #648bf5, #2866f2);*/
-        /*background: linear-gradient(to bottom, #648bf5 0%, #2866f2 100%);*/
-        background-color: #bbb;
-        /*border-top: 1px solid #5a82eb;*/
-        /*border-bottom: 1px solid #1758e7;*/
-      }
-
-      menu menuitem:hover:after, menu li:hover:after {
-        color: #fff;
-      }
-      /**
-       * copied from
-       * http://codepen.io/sstephenson/pen/zepwD
-       */
       
       /**
        * File
        */
       .file-container {
         position: relative;
-        height: 22px;
       }
-
-      .file-container:hover {
-        background-color: #bbb;
-      }
-
-      .file-container menuitem {
+      
+      .file-container label {
         position: relative;
         z-index: 2;
-
-        /*width: 100%;*/
+      
+        width: 100%;
         top: 0;
         left: 0;
-
+      
         pointer-events: none;
       }
-
+      
       .file-container input[type="file"] {
         position: absolute;
         z-index: 1;
-
+      
         width: 100%;
         height: 100%;
         top: 0;
         left: 0;
-
+      
         opacity: 0;
       }
       
@@ -129,14 +98,14 @@
       .submenu-container {
         position: relative;
       }
-
+      
       .submenu-container > .submenu {
         display: none;
         position: absolute;
         left: 100%;
         top: 0;
       }
-
+      
       .submenu-container:hover > .submenu {
         display: block;
       }
@@ -149,66 +118,63 @@
         <template is="dom-if" if="[[ !item.type ]]">
           <menuitem
             hidden$="{{ _computeItemValue('hide', context, item) }}"
-            on-tap="_handleMenuitemTap"
-            label$="{{ _computeItemValue('label', context, item) }}">
+            on-tap="_handleMenuitemTap">
+            {{ _computeItemValue('label', context, item) }}
           </menuitem>
         </template>
 
         <!-- url -->
         <template is="dom-if" if="[[ _itemIs(item, 'url') ]]">
-          <li
-            hidden$="{{ _computeItemValue('hide', context, item) }}">
-            <a
-              on-tap="_handleMenuitemTap"
-              target="{{ _computeItemValue('target', context, item) }}"
-              href="{{ _computeItemValue('url', context, item) }}">
-              {{ _computeItemValue('label', context, item) }}
-            </a>
-          </li>
+          <a
+            class="menuitem"
+            hidden$="{{ _computeItemValue('hide', context, item) }}"
+            on-tap="_handleMenuitemTap"
+            target="{{ _computeItemValue('target', context, item) }}"
+            href="{{ _computeItemValue('url', context, item) }}">
+            {{ _computeItemValue('label', context, item) }}
+          </a>
         </template>
 
         <!-- input:file -->
         <template is="dom-if" if="[[ _itemIs(item, 'input:file') ]]">
-          <div
+          <menuitem
             class="file-container"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
-            <menuitem
-              hidden$="{{ _computeItemValue('hide', context, item) }}"
-              label$="{{ _computeItemValue('label', context, item) }}">
-            </menuitem>
+            <label>
+              {{ _computeItemValue('label', context, item) }}
+            </label>
             <input on-change="_handleFileInputChange" type="file" multiple>
-          </div>
+          </menuitem>
         </template>
 
         <!-- input:directory -->
         <template is="dom-if" if="[[ _itemIs(item, 'input:directory') ]]">
-          <div
+          <menuitem
             class="file-container"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
-            <menuitem
-              hidden$="{{ _computeItemValue('hide', context, item) }}"
-              label$="{{ _computeItemValue('label', context, item) }}">
-            </menuitem>
+            <label>
+              {{ _computeItemValue('label', context, item) }}
+            </label>
             <input
               on-change="_handleFileInputChange"
               type="file"
               webkitdirectory mozdirectory msdirectory odirectory directory>
-          </div>
+          </menuitem>
         </template>
 
         <!-- submenu -->
         <template is="dom-if" if="[[ _itemIs(item, 'submenu') ]]">
-          <li
+          <menuitem
             class="submenu-container"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
-            {{ _computeItemValue('label', context, item) }}
+            <label>{{ _computeItemValue('label', context, item) }}</label>
             <hab-menu
               class="submenu"
               context="{{ context }}"
               options="{{ item.options }}"
-              close="{{ close }}">
+              menu-element="{{ menuElement }}">
             </hab-menu>
-          </li>
+          </menuitem>
         </template>
         
       </template>
