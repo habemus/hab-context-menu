@@ -52,6 +52,50 @@
             }
           },
           {
+            type: 'submenu',
+            label: 'upload',
+            options: [
+              {
+                label: 'file',
+                type: 'input:file',
+              },
+              {
+                label: 'directory',
+                type: 'input:directory',
+              },
+              {
+                label: 'sub-option 1',
+                callback: function (data) {
+                  alert('sub-option 1 with context ' + data.context.name);
+                }
+              },
+              {
+                label: 'sub-option 2',
+                callback: function (data) {
+                  alert('sub-option 2 width context ' + data.context.name);
+                }
+              },
+              {
+                type: 'submenu',
+                label: 'more options',
+                options: [
+                  {
+                    label: 'sub-sub-option 1',
+                    callback: function (data) {
+                      alert('sub-option 1 with context ' + data.context.name);
+                    }
+                  },
+                  {
+                    label: 'sub-sub-option 2',
+                    callback: function (data) {
+                      alert('sub-option 2 width context ' + data.context.name);
+                    }
+                  },
+                ],
+              }
+            ],
+          },
+          {
             label: 'option 3',
             callback: function (data) {
               var context = data.context;
@@ -80,10 +124,6 @@
               }
             }
           },
-          {
-            label: 'some file',
-            type: 'input:file',
-          }
         ]);
         
         // list of items to be rendered
