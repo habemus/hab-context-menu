@@ -15,6 +15,12 @@
       body {
         background-color: skyblue;
       }
+      
+      #near-bottom {
+        position: fixed;
+        bottom: 30px;
+        left: 20px;
+      }
     </style>
   </head>
   <body>
@@ -24,7 +30,7 @@
       <ul>
         <template is="dom-repeat" items="{{ items }}">
           <li>
-            <button on-contextmenu="openContextMenu">[[ item.name ]]</button>
+            <button on-contextmenu="openContextMenu" id="[[ item.name ]]">[[ item.name ]]</button>
           </li>
         </template>
       </ul>
@@ -160,6 +166,7 @@
           { name: '4', data: 'some-data-4' },
           { name: '5', data: 'some-data-5' },
           { name: 'url', url: 'https://habem.us' },
+          { name: 'near-bottom', data: 'near-bottom' },
         ]);
         
         // opens the context menu with the model

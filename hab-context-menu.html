@@ -170,10 +170,10 @@
 
         // check whether the element fits in the window
         var windowHeight = window.innerHeight;
-        var menuHeight   = this.$.menu.offsetHeight;
+        var menuHeight   = this.$.menu.getOffsetHeight();
 
         var bottomDelta = windowHeight - (menuTop + menuHeight + this.bottomMinimumOffset);
-
+        
         if (bottomDelta < 0) {
           menuTop = menuTop + bottomDelta;
         }
