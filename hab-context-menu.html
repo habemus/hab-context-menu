@@ -73,6 +73,15 @@
       },
 
       /**
+       * Minimum distance from the right of the window
+       * @type {Number}
+       */
+      rightMinimumOffset: {
+        type: Number,
+        value: 10,
+      },
+
+      /**
        * Minimum distance from the bottom of the window
        * @type {Number}
        */
@@ -170,12 +179,19 @@
 
         // check whether the element fits in the window
         var windowHeight = window.innerHeight;
+        var windowWidth  = window.innerWidth;
         var menuHeight   = this.$.menu.getOffsetHeight();
+        var menuWidth   = this.$.menu.getOffsetWidth();
 
         var bottomDelta = windowHeight - (menuTop + menuHeight + this.bottomMinimumOffset);
+        var rightDelta = windowWidth - (menuLeft + menuWidth + this.rightMinimumOffset);
         
         if (bottomDelta < 0) {
           menuTop = menuTop + bottomDelta;
+        }
+
+        if (rightDelta < 0) {
+          menuLeft = menuLeft + rightDelta;
         }
 
         // set positioning styles
