@@ -48,6 +48,7 @@
         demoApp.set('options', [
           {
             label: 'option 1',
+            shortcut: 'Cmd + S',
             callback: function (data) {
               var context = data.context;
               alert('option-1 clicked with context ' + context.name)
@@ -64,6 +65,7 @@
               contextMenu.menuClose();
             }
           },
+          { type: 'divider' },
           {
             label: 'option 3',
             callback: function (data) {
@@ -136,6 +138,7 @@
               contextMenu.menuClose();
             }
           },
+          { type: 'divider' },
           {
             label: 'open in new tab',
             type: 'url',
