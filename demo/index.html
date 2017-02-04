@@ -35,7 +35,10 @@
         </template>
       </ul>
       
-      <hab-context-menu id="context-menu" options="{{ options }}"></hab-context-menu>
+      <hab-context-menu
+        id="context-menu"
+        options="{{ options }}"
+        option-groups="{{ optionGroups }}"></hab-context-menu>
     </template>
     
     <script type="text/javascript" charset="utf-8">
@@ -43,7 +46,12 @@
       window.addEventListener('WebComponentsReady', function () {
         var demoApp = document.querySelector('#demo-app');
         var contextMenu = document.querySelector('#context-menu');
-        
+
+        demoApp.set('optionGroups', [
+          'file',
+          'project',
+        ]);
+
         // options of the context menu
         demoApp.set('options', [
           {
@@ -57,6 +65,7 @@
             }
           },
           {
+            group: 'file',
             label: 'option 2',
             callback: function (data) {
               var context = data.context;
@@ -65,7 +74,6 @@
               contextMenu.menuClose();
             }
           },
-          { type: 'divider' },
           {
             label: 'option 3',
             callback: function (data) {
@@ -86,6 +94,7 @@
             }
           },
           {
+            group: 'file',
             type: 'submenu',
             label: 'upload',
             options: [
@@ -96,6 +105,9 @@
               {
                 label: 'directory',
                 type: 'input:directory',
+              },
+              {
+                type: 'divider',
               },
               {
                 label: 'sub-option 1',
@@ -120,6 +132,9 @@
                     }
                   },
                   {
+                     type: 'divider',
+                  },
+                  {
                     label: 'sub-sub-option 2',
                     callback: function (data) {
                       alert('sub-option 2 width context ' + data.context.name);
@@ -138,8 +153,8 @@
               contextMenu.menuClose();
             }
           },
-          { type: 'divider' },
           {
+            group: 'project',
             label: 'open in new tab',
             type: 'url',
 

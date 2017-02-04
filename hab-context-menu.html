@@ -23,6 +23,7 @@
     <hab-menu
       id="menu"
       options="{{ options }}"
+      option-groups="{{ optionGroups }}"
       context="{{ context }}"
       menu-element="{{ self }}">
     </hab-menu>
@@ -44,6 +45,13 @@
        * Array of context menu options
        */
       options: {
+        type: Array,
+      },
+
+      /**
+       * Optional array of context menu groups
+       */
+      optionGroups: {
         type: Array,
       },
 

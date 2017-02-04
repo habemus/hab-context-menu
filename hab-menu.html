@@ -133,7 +133,7 @@
     </style>
 
     <menu id="menu">
-      <template is="dom-repeat" items="{{ options }}">
+      <template is="dom-repeat" items="{{ renderOptions }}">
         <!-- default -->
         <template is="dom-if" if="[[ !item.type ]]">
           <menuitem
@@ -221,6 +221,17 @@
 
 (function() {
 
+  // auxiliary function that sorts alphabetically by property
+  function _sortAlphabeticallyByProp(prop, objA, objB) {
+    if (a[prop] < b[prop]) {
+      return -1;
+    } else if (a[prop] > b[prop]) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   Polymer({
 
     is: 'hab-menu',
@@ -231,7 +242,23 @@
        */
       options: {
         type: Array,
-        notify: true
+        notify: true,
+      },
+
+      /**
+       * Optional array of context menu groups
+       */
+      optionGroups: {
+        type: Array,
+        value: [],
+      },
+
+      /**
+       * Array that will be actually rendered
+       * @type {Object}
+       */
+      renderOptions: {
+        type: Array,
       },
 
       /**
@@ -249,6 +276,73 @@
       menuElement: {
         type: Object,
       }
+    },
+
+    observers: [
+      '_computeRenderOptions(options, optionGroups)',
+    ],
+
+    /**
+     * Computes the options to be rendered upon change of
+     * either the list of options or optionGroups.
+     */
+    _computeRenderOptions: function () {
+
+      // normalize optionGroups format
+      var optionGroups = this.optionGroups.map(function (g) {
+        return typeof g === 'string' ? { name: g } : g;
+      });
+
+      // group the options into their groups
+      var groupedOptions = optionGroups.map(function (group) {
+        var matched = this.options.filter(function (opt) {
+          return typeof opt.group === 'string' && opt.group === group.name;
+        });
+
+        if (group.sortBy) {
+          matched.sort(group.sortBy);
+        }
+
+        return {
+          name: group.name,
+          options: matched,
+        };
+
+      }.bind(this));
+
+      // add the remaining options to the end
+      // TODO: this is duplicated run, as all options have previously
+      // passed the same opposite test
+      var remaining = this.options.filter(function (opt) {
+        return typeof opt.group === undefined || !optionGroups.some(function (group) {
+          return group.name === opt.group;
+        });
+      }.bind(this));
+
+      groupedOptions.push({
+        options: remaining
+      });
+
+      // filter out empty groups
+      groupedOptions = groupedOptions.filter(function (g) {
+        console.log(g);
+        return g.options.length > 0;
+      });
+
+      // concatenate all options into an array to be rendered
+      var renderOptions = groupedOptions.reduce(function (acc, g, gIdx) {
+        acc = acc.concat(g.options);
+
+        if (gIdx !== groupedOptions.length -1) {
+          acc.push({
+            type: 'divider'
+          });
+        }
+
+        return acc;
+      }, []);
+
+      this.set('renderOptions', renderOptions);
     },
 
     /**
