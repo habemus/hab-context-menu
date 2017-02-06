@@ -99,13 +99,27 @@
         position: relative;
       }
       
-      .submenu-container:after {
-        /* TODO: use inline background image */
-        content: '>';
+      .submenu-container > img.submenu-arrow {
+        height: 16px;
+        width: 16px;
+        
         position: absolute;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translate(90%, -50%);
         right: 20px;
+      }
+      
+      .submenu-container > img.submenu-arrow.dark {
+        display: block;
+      }
+      .submenu-container > img.submenu-arrow.light {
+        display: none;
+      }
+      .submenu-container:hover > img.submenu-arrow.dark {
+        display: none;
+      }
+      .submenu-container:hover > img.submenu-arrow.light {
+        display: block;
       }
       
       .submenu-container > .submenu {
@@ -122,8 +136,7 @@
       hr.divider {
         margin: 0 0;
         border: none;
-        /* TODO: update color */
-        border-top: 1px solid #D0D0D0;
+        border-top: 1px solid #CECECE;
       }
       
       .shortcut {
@@ -196,6 +209,9 @@
             <label>
               {{ _computeItemValue('label', context, item) }}
             </label>
+            
+            <img class="submenu-arrow dark" src="data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16' enable-background='new 0 0 16 16' xml:space='preserve'><symbol id='arrow-pastas' viewBox='-4.354 -1.707 8.707 5.061'><g><polyline fill='none' stroke='%233C3C3C' stroke-miterlimit='10' points='-4,3 -0.001,-1 4,3 '/></g></symbol><use xlink:href='%23arrow-pastas' width='8.707' height='5.061' id='XMLID_18_' x='-4.354' y='-1.707' transform='matrix(0 -1 -1 0 9.3535 8)' overflow='visible'/></svg>" alt="">
+            <img class="submenu-arrow light" src="data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16' enable-background='new 0 0 16 16' xml:space='preserve'><symbol id='arrow-pastas' viewBox='-4.354 -1.707 8.707 5.061'><g><polyline fill='none' stroke='%23F5F5F5' stroke-miterlimit='10' points='-4,3 -0.001,-1 4,3 '/></g></symbol><use xlink:href='%23arrow-pastas' width='8.707' height='5.061' id='XMLID_18_' x='-4.354' y='-1.707' transform='matrix(0 -1 -1 0 9.3535 8)' overflow='visible'/></svg>" alt="">
             
             <hab-menu
               class="submenu"
