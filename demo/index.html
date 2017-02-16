@@ -38,7 +38,23 @@
       <hab-context-menu
         id="context-menu"
         options="{{ options }}"
-        option-groups="{{ optionGroups }}"></hab-context-menu>
+        option-groups="{{ optionGroups }}">
+      </hab-context-menu>
+
+      <form id="new-menu-item-form" on-submit="addMenuItem">
+        <label>
+          new menu item
+        </label>
+        <input type="text" name="label" placeholder="label">
+        <select name="type">
+          <option disabled selected value="">type</option>
+          <option value="input:file">input:file</option>
+          <option value="input:directory">input:directory</option>
+        </select>
+        <input type="text" name="group" placeholder="group">
+
+        <button>create</button>
+      </form>
     </template>
     
     <script type="text/javascript" charset="utf-8">
@@ -202,6 +218,32 @@
             top: menuTop,
             left: menuLeft
           });
+        };
+
+        demoApp.addMenuItem = function (e) {
+          e.preventDefault();
+
+          var form = document.querySelector('#new-menu-item-form');
+          var label = form.querySelector('[name="label"]').value;
+          var type  = form.querySelector('[name="type"]').value || '';
+          var group = form.querySelector('[name="group"]').value || '';
+
+          if (!label) {
+            alert('label is required');
+            return;
+          }
+
+          var menuItem = {
+            label: label,
+            type: type,
+            group: group,
+          }
+
+          form.querySelector('[name="label"]').value = '';
+          form.querySelector('[name="type"]').value = '';
+          form.querySelector('[name="group"]').value = '';
+
+          contextMenu.addOptions(menuItem);
         };
       });
       

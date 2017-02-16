@@ -230,6 +230,30 @@
         'contextmenu', this._handleBackdropContextmenu);
     },
 
+    /**
+     * Adds options to the menu.
+     * Proxies the method to the hab-menu element within the context menu.
+     */
+    addOptions: function () {
+      var menu = this.$.menu;
+
+      var args = Array.prototype.slice.call(arguments, 0);
+
+      return menu.addOptions.apply(menu, args);
+    },
+
+    /**
+     * Removes options from the menu.
+     * Proxies the method to the hab-menu element within the context menu.
+     */
+    removeOptions: function () {
+      var menu = this.$.menu;
+
+      var args = Array.prototype.slice.call(arguments, 0);
+
+      return menu.removeOptions.apply(menu, args);
+    },
+
   });
 
 })();

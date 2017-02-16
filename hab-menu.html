@@ -448,6 +448,50 @@
       return this.$.menu.offsetWidth;
     },
 
+    /**
+     * Adds options to the menu
+     * @param {Array[Object]} options
+     *        - label: String (required)
+     *        - type: String
+     */
+    addOptions: function (optionsToAdd) {
+
+      if (!optionsToAdd) {
+        throw new Error('optionsToAdd to be removed are required');
+      }
+
+      optionsToAdd = Array.isArray(optionsToAdd) ? optionsToAdd : [optionsToAdd];
+
+      this.set('options', this.get('options').concat(optionsToAdd));
+    },
+
+    /**
+     * Removes options from the menu.
+     * Only thought for working at the first menu level.
+     * 
+     * @param  {Array[Object|String]} options
+     */
+    removeOptions: function (optionsToRemove) {
+
+      if (!optionsToRemove) {
+        throw new Error('optionsToRemove to be removed are required');
+      }
+
+      optionsToRemove = Array.isArray(optionsToRemove) ? optionsToRemove : [optionsToRemove];
+
+      var currOptions = this.get('options');
+
+      this.set('options', currOptions.filter(function (opt) {
+        return !optionsToRemove.some(function (toRemove) {
+          if (typeof toRemove === 'string') {
+            return opt.label === toRemove;
+          } else {
+            return toRemove === opt;
+          }
+        });
+      }));
+    },
+
   });
 
 })();
