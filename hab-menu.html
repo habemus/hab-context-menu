@@ -183,7 +183,11 @@
             <label>
               {{ _computeItemValue('label', context, item) }}
             </label>
-            <input on-change="_handleFileInputChange" type="file" multiple>
+            <input
+              on-change="_handleFileInputChange"
+              type="file"
+              accept$="{{ _computeItemValue('accept', context, item) }}"
+              multiple$="{{ _computeItemValue('multiple', context, item) }}">
           </menuitem>
         </template>
 
@@ -391,7 +395,8 @@
     _handleFileInputChange: function (e) {
       var data  = e.model.item;
       // make a copy of the files array
-      var files = Array.prototype.slice.call(e.target.files, 0);
+      var files = e.target.files ?
+        Array.prototype.slice.call(e.target.files, 0) : false;
 
       if (typeof data.callback === 'function') {
         data.callback({

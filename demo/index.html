@@ -107,8 +107,14 @@
             label: 'upload',
             options: [
               {
-                label: 'file',
+                label: 'multiple files',
                 type: 'input:file',
+                multiple: true,
+              },
+              {
+                label: 'single file',
+                type: 'input:file',
+                multiple: false,
               },
               {
                 label: 'directory',
