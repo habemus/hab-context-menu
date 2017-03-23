@@ -110,11 +110,17 @@
                 label: 'multiple files',
                 type: 'input:file',
                 multiple: true,
+                callback: function (data) {
+                  console.log('multiple files', data);
+                }
               },
               {
                 label: 'single file',
                 type: 'input:file',
                 multiple: false,
+                callback: function (data) {
+                  console.log('single file', data);
+                }
               },
               {
                 label: 'directory',

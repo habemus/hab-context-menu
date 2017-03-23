@@ -178,7 +178,6 @@
         <template is="dom-if" if="[[ _itemIs(item, 'input:file') ]]">
           <menuitem
             class="file-container"
-            on-tap="_handleMenuitemTap"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
             <label>
               {{ _computeItemValue('label', context, item) }}
@@ -195,7 +194,6 @@
         <template is="dom-if" if="[[ _itemIs(item, 'input:directory') ]]">
           <menuitem
             class="file-container"
-            on-tap="_handleMenuitemTap"
             hidden$="{{ _computeItemValue('hide', context, item) }}">
             <label>
               {{ _computeItemValue('label', context, item) }}
@@ -416,6 +414,13 @@
 
       // reset the input at the end
       e.target.value = '';
+
+      if (!data.preventClose) {
+        // run the default behaviour of
+        // closing the menu in the next tick so that it does
+        // not interfere with the default behavior of the elemnt
+        setTimeout(this.menuElement.menuClose.bind(this.menuElement), 0);
+      }
     },
 
     /**
